@@ -4,15 +4,25 @@ import day02.Action.*
 import day02.Result.*
 import utils.readFile
 
-private val map = mapOf('A' to Rock, 'B' to Paper, 'C' to Scissors, 'X' to Rock, 'Y' to Paper, 'Z' to Scissors)
+private val actions = mapOf('A' to Rock, 'B' to Paper, 'C' to Scissors, 'X' to Rock, 'Y' to Paper, 'Z' to Scissors)
+private val results = mapOf('X' to Loss, 'Y' to Draw, 'Z' to Win)
+private val wins = mapOf(Rock to Scissors, Paper to Rock, Scissors to Paper)
+private val loses = mapOf(Rock to Paper, Paper to Scissors, Scissors to Rock)
 
-fun part1(input: List<Round>): Int = input.sumOf { it.result.value + it.p2.value }
+fun part1(input: List<Pair<Action, Char>>): Int =
+    input.map { (p1, p2) -> Round(p1, actions[p2]!!) }
+        .sumOf { it.result.value + it.p2.value }
 
-fun parseInput(lines: List<String>) = lines.map { Round(map.getValue(it[0]), map.getValue(it[2])) }
+fun part2(input: List<Pair<Action, Char>>): Int =
+    input.map { (p1, result) -> InverseRound(p1, results[result]!!) }
+        .sumOf { it.result.value + it.p2.value }
+
+fun parseInput(lines: List<String>) = lines.map { actions[it[0]]!! to it[2] }
 
 fun main() {
     val input = parseInput(readFile("02"))
     println(part1(input))
+    println(part2(input))
 }
 
 enum class Action(val value: Int) {
@@ -33,12 +43,18 @@ data class Round(
 ) {
     val result: Result = when {
         p1 == p2 -> Draw
-        when (p1) {
-            Rock -> Paper
-            Paper -> Scissors
-            Scissors -> Rock
-        } == p2 -> Win
-
+        loses[p1] == p2 -> Win
         else -> Loss
+    }
+}
+
+data class InverseRound(
+    val p1: Action,
+    val result: Result,
+) {
+    val p2: Action = when (result) {
+        Draw -> p1
+        Loss -> wins[p1]!!
+        Win -> loses[p1]!!
     }
 }
