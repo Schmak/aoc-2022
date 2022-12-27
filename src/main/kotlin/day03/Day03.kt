@@ -11,9 +11,12 @@ fun part1(input: List<String>): Int =
         ).commonChar.priority
     }
 
+fun part2(input: List<String>): Int = input.chunked(3).sumOf { it.commonChar.priority }
+
 fun main() {
     val input = readFile("03")
     println(part1(input))
+    println(part2(input))
 }
 
 private val Collection<String>.commonChar: Char
