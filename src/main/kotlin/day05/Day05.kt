@@ -8,6 +8,15 @@ fun part1(input: Input): String {
     return input.fingerprint()
 }
 
+fun part2(input: Input): String {
+    val tmp = ArrayDeque<Char>()
+    for (step in input.program) {
+        input.stacks[step.from - 1].copyTo(tmp, number = step.number)
+        tmp.copyTo(input.stacks[step.to - 1], number = step.number)
+    }
+    return input.fingerprint()
+}
+
 fun parseInput(lines: List<String>): Input {
     val divider = lines.indexOf("")
     check(divider > 0)
@@ -43,8 +52,9 @@ private fun <E> ArrayDeque<E>.copyTo(other: ArrayDeque<E>, number: Int) =
     repeat(number) { other.addLast(this.removeLast()) }
 
 fun main() {
-    val input = parseInput(readFile("05"))
-    println(part1(input))
+    val input = readFile("05")
+    println(part1(parseInput(input)))
+    println(part2(parseInput(input)))
 }
 
 data class Input(

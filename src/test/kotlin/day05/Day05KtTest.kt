@@ -11,7 +11,14 @@ class Day05KtTest {
         assertThat(actual).isEqualTo("CMZ")
     }
 
+    @Test
+    fun part2() {
+        val actual = part2(input)
+        assertThat(actual).isEqualTo("MCD")
+    }
+
     companion object {
-        private val input = parseInput(readFile("05", type = "test"))
+        private val input
+            get() = parseInput(readFile("05", type = "test"))
     }
 }
