@@ -10,6 +10,14 @@ fun part1(input: Dir): Long =
         .filter { it <= 100_000 }
         .sum()
 
+fun part2(input: Dir): Long {
+    val threshold = input.totalSize - 40_000_000
+    return input.allDirs
+        .map { it.totalSize }
+        .filter { it >= threshold }
+        .min()
+}
+
 private const val CD = "$ cd "
 
 fun parseInput(lines: List<String>): Dir = sequence {
@@ -55,6 +63,7 @@ fun process(commands: Sequence<CommandWithResult>): Dir {
 fun main() {
     val input = parseInput(readFile("07"))
     println(part1(input))
+    println(part2(input))
 }
 
 sealed interface CommandWithResult {
